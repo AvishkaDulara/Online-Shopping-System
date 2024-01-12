@@ -1,8 +1,13 @@
+import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
-public class shop {
-    private static final ArrayList<Product> productList = new ArrayList<>();
+
+public class WestminsterShoppingManager {
+    private static List<product> productList = new ArrayList<>();
+    //private static final ArrayList<Product> productList;
     static int op;
 
     static String name;
@@ -12,9 +17,10 @@ public class shop {
     static String type;
     static String brand;
     static int warrantyPeriod;
-    //static String electronicsProduct;
     static String size;
     static String color;
+
+
 
     public static void main(String[]args){
         System.out.println("******************Welcome to Online shopping System******************");
@@ -62,10 +68,10 @@ public class shop {
                     deleteProduct();
                     break;
                 case 3:
-                    //print_list();
+                    print_list();
                     break;
                 case 4:
-                    //save_file();
+                    save_file();
                     break;
             }
         }
@@ -73,8 +79,13 @@ public class shop {
 
     }
 
+    private static void save_file() {
+
+    }
+
     //------------------method add product-------------------
     static void add_product() {
+
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Enter product ID: ");
@@ -93,35 +104,37 @@ public class shop {
         System.out.print("Product type (E for Electronics, C for Clothing): ");
         type = scanner.next();
 
-        if(type.equalsIgnoreCase("E")) {
+        if("E".equals(type)) {
             // Create Electronics product
             System.out.print("Enter brand: ");
             brand = scanner.next();
 
             System.out.print("Enter warranty period(Enter the number of months): ");
             warrantyPeriod = scanner.nextInt();
-
-            Electronics e = new Electronics(id, name, price, qty, brand, warrantyPeriod);
-            productList.add(e);
-
-        } else if(type.equalsIgnoreCase("C")) {
+            Electronics electronics = new Electronics(id,name,price,qty,brand,warrantyPeriod);
+            //Electronics e = new Electronics(id, name, price, qty, brand, warrantyPeriod);
+            productList.add(electronics);
+        }else if("C".equals(type)) {
             // Create Clothing product
             System.out.print("Enter size: ");
-            String size = scanner.next();
+            size = scanner.next();
 
             System.out.print("Enter color: ");
-            String color = scanner.next();
+            color = scanner.next();
 
-            Clothing c = new Clothing(id, name, price, qty,size,color);
-            productList.add(c);
+            Clothing clothing = new Clothing(id, name, price, qty,size,color);
+            productList.add(clothing);
+
+        }else {
+            System.out.println("Enter valid type: ");
 
         }
 
         System.out.println("Product added!");
+        product Product = new product();
+        productList.add(Product);
 
     }
-
-
 
 
     //------------------method delete product------------------
@@ -129,15 +142,15 @@ public class shop {
 
             Scanner scanner = new Scanner(System.in);
             System.out.print("Enter product ID to delete: ");
-            //id = Integer.parseInt(scanner.nextLine());
             id = scanner.nextLine();
 
 
-            for(Product p: productList) {
-                if(p.getID().equals(id)) {
-                    productList.remove(p);
+            for(product product:productList) {
+                if (product.getId() == id) {
+                    //boolean product = false;
+                    productList.remove(product);
                     System.out.println("Deleted:");
-                    System.out.println(p);
+                    System.out.println(product);
                     System.out.println("Total products: " + productList.size());
                     return;
                 }
@@ -145,38 +158,35 @@ public class shop {
 
             System.out.println("Product not found!");
 
-        }
-
-
-    private static class Electronics extends Product {
-        public Electronics(String id, String name, double price, int qty, String brand, int warranty) {
-
+    }
+    //------------------method print list------------------
+    public void print_list(String fileName) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName))) {
+            productList = new ArrayList<>();
+            while (true) {
+                try {
+                    product product = (product) ois.readObject();
+                    productList.add(product);
+                } catch (EOFException e) {
+                    break;
+                }
+            }
+            System.out.println("Products loaded from file: " + fileName);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
-    private static class Clothing extends Product {
-        public Clothing(String id, String name, double price, int qty, String size, String color) {
-
+    public static void save_file(String fileName) {
+        name = fileName;
+        try (FileWriter fileWriter = new FileWriter(fileName)) {
+            for (product product : productList) {
+                fileWriter.write(product.getId() +", "+ product.getName() +", "+ product.getPrice() +", "+ product.getQty());
+            }
+            System.out.println("Product List Successfully Saved..");
+        } catch (IOException e) {
+            System.err.println("Error massage saving to file: " + e.getMessage());
         }
     }
+
 }
-
-    // Assume you have a Product class or its subclasses (Electronics, Clothing) defined
-    class Product {
-        /*private int id;
-        private String name;
-        private int price;
-        private int quantity;
-
-        /*Product() {
-        }*/
-
-        public Object getID() {
-            return null;
-        }
-
-        // Constructors, getters, and setters
-
-        // Other methods if needed
-
-    }
