@@ -20,7 +20,7 @@ public class ShoppingCart {
         itemListInCart.remove(item);
     }
 
-    public double getTotalCost() {
+    public double getFinalTotal() {
         double totalCost = 0.0;
         Map<String, Integer> categoryCount = new HashMap<>();
 
@@ -40,6 +40,39 @@ public class ShoppingCart {
         }
 
         return totalCost;
+    }
+
+    public double getTotalCost() {
+        double totalCost = 0.0;
+
+        for (Product product : itemListInCart) {
+            double price = product.getPrice();
+            totalCost += price;
+        }
+
+        return totalCost;
+    }
+
+    public double getCategoryDiscount() {
+        double discount = 0.0;
+        Map<String, Integer> categoryCount = new HashMap<>();
+
+        for (Product product : itemListInCart) {
+            String category = product.getProductCategory();
+            categoryCount.put(category, categoryCount.getOrDefault(category, 0) + 1);
+        }
+
+        for (Product product : itemListInCart) {
+            double price = product.getPrice();
+
+            if (categoryCount.get(product.getProductCategory()) >= 3) {
+                discount=discount + (price * 0.2);
+
+            }
+
+        }
+
+        return discount;
     }
 
 //    public double getSummarizedCartDetails() {

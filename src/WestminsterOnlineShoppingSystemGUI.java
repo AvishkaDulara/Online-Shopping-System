@@ -19,6 +19,12 @@ public class WestminsterOnlineShoppingSystemGUI {
     private JFrame cartFrame;
     private JTable cartTable;
 
+    private JLabel totalLabel;
+    private JLabel firstPurchaseDiscountLabel;
+    private JLabel categoryDiscountLabel;
+
+    private JLabel finalTotalLabel;
+
     public WestminsterOnlineShoppingSystemGUI(ShoppingManager manager, ShoppingCart cart, List<Product> productList) {
         this.manager = manager;
         this.cart = cart;
@@ -77,6 +83,38 @@ public class WestminsterOnlineShoppingSystemGUI {
         });
         cartTable.setEnabled(false);
         cartFrame.add(new JScrollPane(cartTable), BorderLayout.CENTER);
+
+        // Summary panel setup
+        JPanel summaryPanel = new JPanel();
+        summaryPanel.setLayout(new GridLayout(4, 2));  // 4 rows, 2 columns
+
+
+        // Total
+
+        summaryPanel.add(new JLabel("Total: "));
+        totalLabel=new JLabel();
+        summaryPanel.add(totalLabel);
+
+        // First Purchase Discount
+//        firstPurchaseDiscountLabel = new JLabel("First Purchase Discount (10%): -8.58 €");
+//        summaryPanel.add(new JLabel("Total: "));
+//        summaryPanel.add(firstPurchaseDiscountLabel);
+
+        // Category Discount
+
+        summaryPanel.add(new JLabel("Three Items in same Category Discount (20%):"));
+        categoryDiscountLabel=new JLabel();
+        summaryPanel.add(categoryDiscountLabel);
+
+        // Final Total
+
+        summaryPanel.add(new JLabel("Final Total:"));
+        finalTotalLabel=new JLabel();
+        summaryPanel.add(finalTotalLabel);
+
+        cartFrame.add(summaryPanel, BorderLayout.SOUTH);
+
+        cartFrame.setVisible(true);
     }
 
     private void setupMainFrame() {
@@ -179,7 +217,10 @@ public class WestminsterOnlineShoppingSystemGUI {
         model.setRowCount(0);
         List<Product> itemList=cart.getItems();
         cart.getItems().forEach(p -> model.addRow(new Object[]{p.getName(), 1, p.getPrice()}));
-        priceLabel.setText(String.format("%.2f", cart.getTotalCost()));
+        priceLabel.setText(String.format("%.2f", cart.getFinalTotal()));
+        totalLabel.setText(String.format("%.2f", cart.getTotalCost()));
+        categoryDiscountLabel.setText(String.format("%.2f", cart.getCategoryDiscount()));
+        finalTotalLabel.setText(String.format("%.2f",cart.getTotalCost()- cart.getCategoryDiscount()));
 
         cartFrame.setVisible(true);
     }
