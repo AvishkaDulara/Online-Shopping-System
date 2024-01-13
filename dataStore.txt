@@ -1,0 +1,3 @@
+id1,name1,Electronics,2,23.0-brand1,12
+id2,name2,Clothing,324,77.0-3,col
+id4,name4,Electronics,223,65.0-brand4,23

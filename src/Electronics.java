@@ -1,8 +1,9 @@
-public class Electronics extends product{
+public class Electronics extends Product {
     private String brand;
     private int warrantyPeriod;
 
-    public Electronics(String brand, String name, int warrantyPeriod, int qty, String s, int period){
+    public Electronics(String id, String name,double price, int qty, String brand, int warrantyPeriod){
+        super(id,name,qty,price);
         this.brand= brand;
         this.warrantyPeriod=warrantyPeriod;
     }
@@ -21,5 +22,10 @@ public class Electronics extends product{
 
     public void setWarrantyPeriod(int warrantyPeriod) {
         this.warrantyPeriod = warrantyPeriod;
+    }
+
+    @Override
+    public String getProductCategory() {
+        return "Electronics";
     }
 }

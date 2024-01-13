@@ -1,65 +1,88 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-class Product {
-    private String name;
-    private double price;
-
-    public Product(String name, double price) {
-        this.name = name;
-        this.price = price;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-}
+// Assuming the Product class exists with fields 'name' and 'price', along with appropriate constructors and getters
 
 public class ShoppingCart {
-    private List<Product> productList;
+    private List<Product> itemListInCart;
 
     public ShoppingCart() {
-        this.productList = new ArrayList<>();
+        itemListInCart = new ArrayList<>();
     }
 
-    // Methods to add, remove, and calculate total cost
-    public void addProductToCart(product product) {
-        productList.add(product);
+    public void addItem(Product item) {
+        itemListInCart.add(item);
     }
 
-    public void removeProductFromCart(product product) {
-        productList.remove(product);
+    public void removeItem(Product item) {
+        itemListInCart.remove(item);
     }
 
-    public double calculateTotalCost() {
-        double totalCost = 0;
-        for (Product product : productList) {
-            totalCost += product.getPrice();
+    public double getTotalCost() {
+        double totalCost = 0.0;
+        Map<String, Integer> categoryCount = new HashMap<>();
+
+        for (Product product : itemListInCart) {
+            String category = product.getProductCategory();
+            categoryCount.put(category, categoryCount.getOrDefault(category, 0) + 1);
         }
+
+        for (Product product : itemListInCart) {
+            double price = product.getPrice();
+
+            if (categoryCount.get(product.getProductCategory()) >= 3) {
+                price =price * 0.8;
+            }
+
+            totalCost += price;
+        }
+
         return totalCost;
     }
 
-    // Getter for the product list
-    public List<Product> getProductList() {
-        return productList;
+//    public double getSummarizedCartDetails() {
+//        double totalCost = 0.0;
+//        Map<String, Integer> itemCount = new HashMap<>();
+//
+//        for (Product product : itemListInCart) {
+//            String itemId = product.getId();
+//            itemMap.put(itemId, itemMap.getOrDefault(itemId, 0) + 1);
+//        }
+//
+//        for (Product product : itemListInCart) {
+//            double price = product.getPrice();
+//
+//            if (categoryCount.get(product.getProductCategory()) >= 3) {
+//                price =price * 0.8;
+//            }
+//
+//            totalCost += price;
+//        }
+//
+//        return totalCost;
+//    }
+
+
+    public List<Product> getItems() {
+        return new ArrayList<>(itemListInCart);
     }
 
-    public static void main(String[] args) {
-        // Example usage
-        Product product1 = new Product("Product 1", 10.99);
-        Product product2 = new Product("Product 2", 5.99);
-
-        ShoppingCart shoppingCart = new ShoppingCart();
-
-        shoppingCart.addProductToCart(product1);
-        shoppingCart.addProductToCart(product2);
-
-        double totalCost = shoppingCart.calculateTotalCost();
-        System.out.println("Total cost: $" + totalCost);
-
-        shoppingCart.removeProductFromCart(product1);
-
-        double updatedTotalCost = shoppingCart.calculateTotalCost();
-        System.out.println("Updated total cost: $" + updatedTotalCost);
-    }
+//    public static void main(String[] args) {
+//        // Demonstration of CartManager functionality
+//        Product firstProduct = new Product("Gadget", 20.50);
+//        Product secondProduct = new Product("Accessory", 9.75);
+//
+//        ShoppingCart cart = new ShoppingCart();
+//
+//        cart.addItem(firstProduct);
+//        cart.addItem(secondProduct);
+//
+//        System.out.println("Initial Total: $" + cart.getTotalCost());
+//
+//        cart.removeItem(firstProduct);
+//
+//        System.out.println("New Total after removal: $" + cart.getTotalCost());
+//    }
 }
